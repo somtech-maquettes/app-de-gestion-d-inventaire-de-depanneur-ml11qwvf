@@ -48,7 +48,13 @@
       "delivery_summary": [
         "Suppression bulle d'aide orange dans sidebar gauche"
       ]
+    },
+    {
+      "date": "2026-01-30T15:56:44.353Z",
+      "feedback": "1. change le orange en rose",
+      "specs_summary": "Remplacer toutes les occurrences de la couleur orange par du rose dans toute l'application",
+      "complexity": "simple"
     }
   ],
-  "last_modified": "2026-01-30T15:53:26.743Z"
+  "last_modified": "2026-01-30T15:56:44.353Z"
 }

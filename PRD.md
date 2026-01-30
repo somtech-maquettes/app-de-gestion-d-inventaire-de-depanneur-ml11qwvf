@@ -17,6 +17,13 @@ app de gestion d'inventaire de depanneur
 ## Historique des modifications
 
 ### 2026-01-30 - Modification
+**Demande:** 1. change le orange en rose
+**Specs:** Remplacer toutes les occurrences de la couleur orange par du rose dans toute l'application
+**Complexité:** simple
+**Livrables:** N/A
+
+
+### 2026-01-30 - Modification
 **Demande:** enleve a bulle d'Aide
 **Specs:** Suppression de la bulle d'aide dans la sidebar gauche
 **Complexité:** simple

@@ -121,11 +121,11 @@
     ];
 
     const categoriesData = [
-      { name: "Boissons", value: 35, color: "#f97316" },
-      { name: "Collations", value: 25, color: "#fb923c" },
-      { name: "Tabac", value: 20, color: "#fdba74" },
-      { name: "Loterie", value: 10, color: "#fed7aa" },
-      { name: "Autres", value: 10, color: "#ffedd5" }
+      { name: "Boissons", value: 35, color: "#ec4899" },
+      { name: "Collations", value: 25, color: "#f472b6" },
+      { name: "Tabac", value: 20, color: "#f9a8d4" },
+      { name: "Loterie", value: 10, color: "#fbb6ce" },
+      { name: "Autres", value: 10, color: "#fce7f3" }
     ];
 
     const suppliers = [
@@ -169,7 +169,7 @@
           {/* Notification */}
           {showNotification && (
             <div className="fixed top-4 right-4 z-50 animate-scale-in">
-              <div className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
+              <div className="bg-pink-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
@@ -183,7 +183,7 @@
             <div className="px-4 md:px-8 py-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18M3 7h18M3 11h18M3 15h18M3 19h18" />
                     </svg>
@@ -194,7 +194,7 @@
 
               <div className="flex items-center gap-3">
                 {lowStockProducts.length > 0 && (
-                  <div className="bg-orange-100 text-orange-700 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse">
+                  <div className="bg-pink-100 text-pink-700 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -219,7 +219,7 @@
                   onClick={() => setActiveTab('dashboard')}
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
                     ${activeTab === 'dashboard'
-                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25 transform scale-105'
                       : 'text-gray-700 hover:bg-gray-100'}`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,7 +232,7 @@
                   onClick={() => setActiveTab('inventaire')}
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
                     ${activeTab === 'inventaire'
-                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25 transform scale-105'
                       : 'text-gray-700 hover:bg-gray-100'}`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -245,7 +245,7 @@
                   onClick={() => setActiveTab('commandes')}
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
                     ${activeTab === 'commandes'
-                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25 transform scale-105'
                       : 'text-gray-700 hover:bg-gray-100'}`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,7 +258,7 @@
                   onClick={() => setActiveTab('fournisseurs')}
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
                     ${activeTab === 'fournisseurs'
-                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25 transform scale-105'
                       : 'text-gray-700 hover:bg-gray-100'}`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,7 +271,7 @@
                   onClick={() => setActiveTab('rapports')}
                   className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
                     ${activeTab === 'rapports'
-                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/25 transform scale-105'
                       : 'text-gray-700 hover:bg-gray-100'}`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -287,7 +287,7 @@
               <div className="grid grid-cols-5 gap-1">
                 <button
                   onClick={() => setActiveTab('dashboard')}
-                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'dashboard' ? 'text-orange-500' : 'text-gray-600'}`}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'dashboard' ? 'text-pink-500' : 'text-gray-600'}`}
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -297,7 +297,7 @@
 
                 <button
                   onClick={() => setActiveTab('inventaire')}
-                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'inventaire' ? 'text-orange-500' : 'text-gray-600'}`}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'inventaire' ? 'text-pink-500' : 'text-gray-600'}`}
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
@@ -307,7 +307,7 @@
 
                 <button
                   onClick={() => setActiveTab('commandes')}
-                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'commandes' ? 'text-orange-500' : 'text-gray-600'}`}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'commandes' ? 'text-pink-500' : 'text-gray-600'}`}
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -317,7 +317,7 @@
 
                 <button
                   onClick={() => setActiveTab('fournisseurs')}
-                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'fournisseurs' ? 'text-orange-500' : 'text-gray-600'}`}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'fournisseurs' ? 'text-pink-500' : 'text-gray-600'}`}
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -327,7 +327,7 @@
 
                 <button
                   onClick={() => setActiveTab('rapports')}
-                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'rapports' ? 'text-orange-500' : 'text-gray-600'}`}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'rapports' ? 'text-pink-500' : 'text-gray-600'}`}
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -357,8 +357,8 @@
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '0ms'}}>
                       <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
@@ -370,8 +370,8 @@
 
                     <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '100ms'}}>
                       <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                           </svg>
                         </div>
@@ -383,8 +383,8 @@
 
                     <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '200ms'}}>
                       <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                           </svg>
                         </div>
@@ -396,8 +396,8 @@
 
                     <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '300ms'}}>
                       <div className="flex items-center justify-between mb-4">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                           </svg>
                         </div>
@@ -414,7 +414,7 @@
                     <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                       <div className="flex items-center justify-between mb-6">
                         <h3 className="font-display text-lg font-semibold text-gray-900">Évolution des ventes</h3>
-                        <select className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <select className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-pink-500">
                           <option>6 derniers mois</option>
                           <option>3 derniers mois</option>
                           <option>Ce mois</option>
@@ -485,18 +485,18 @@
 
                   {/* Low Stock Alert */}
                   {lowStockProducts.length > 0 && (
-                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                    <div className="bg-pink-50 border border-pink-200 rounded-xl p-6">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <div className="w-10 h-10 bg-pink-500 rounded-lg flex items-center justify-center">
                           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                           </svg>
                         </div>
-                        <h3 className="font-display text-lg font-semibold text-orange-900">Produits en stock bas</h3>
+                        <h3 className="font-display text-lg font-semibold text-pink-900">Produits en stock bas</h3>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         {lowStockProducts.map(product => (
-                          <div key={product.id} className="bg-white rounded-lg p-3 border border-orange-200 flex items-center justify-between">
+                          <div key={product.id} className="bg-white rounded-lg p-3 border border-pink-200 flex items-center justify-between">
                             <div>
                               <p className="font-medium text-gray-900">{product.nom}</p>
                               <p className="text-sm text-gray-600">Stock: {product.quantite} / Seuil: {product.seuil}</p>
@@ -506,7 +506,7 @@
                                 setActiveTab('commandes');
                                 showNotif('Navigation vers les commandes');
                               }}
-                              className="p-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200"
+                              className="p-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors duration-200"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -530,7 +530,7 @@
                     </div>
                     <button
                       onClick={() => setShowAddModal(true)}
-                      className="mt-4 md:mt-0 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                      className="mt-4 md:mt-0 bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-pink-500/25"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -552,7 +552,7 @@
                             placeholder="Rechercher un produit..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                           />
                         </div>
                       </div>
@@ -563,7 +563,7 @@
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200
                               ${selectedCategory === cat
-                                ? 'bg-orange-500 text-white'
+                                ? 'bg-pink-500 text-white'
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                           >
                             {cat}
@@ -629,7 +629,7 @@
                                       setEditingProduct(product);
                                       setShowEditModal(true);
                                     }}
-                                    className="p-1.5 hover:bg-orange-100 text-orange-600 rounded transition-colors duration-200"
+                                    className="p-1.5 hover:bg-pink-100 text-pink-600 rounded transition-colors duration-200"
                                   >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -672,7 +672,7 @@
                         setActiveTab('inventaire');
                         showNotif('Vérifiez votre inventaire d\'abord');
                       }}
-                      className="mt-4 md:mt-0 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                      className="mt-4 md:mt-0 bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-pink-500/25"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -685,8 +685,8 @@
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
                       <div className="flex items-center gap-4 mb-3">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                           </svg>
                         </div>
@@ -702,8 +702,8 @@
 
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
                       <div className="flex items-center gap-4 mb-3">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
@@ -719,8 +719,8 @@
 
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
                       <div className="flex items-center gap-4 mb-3">
-                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
@@ -762,7 +762,7 @@
                               <span className="px-2.5 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">En livraison</span>
                             </td>
                             <td className="px-6 py-4 text-center whitespace-nowrap">
-                              <button className="text-orange-600 hover:text-orange-700 font-medium">Suivre</button>
+                              <button className="text-pink-600 hover:text-pink-700 font-medium">Suivre</button>
                             </td>
                           </tr>
                           <tr className="hover:bg-gray-50 transition-colors duration-150">
@@ -774,7 +774,7 @@
                               <span className="px-2.5 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Livrée</span>
                             </td>
                             <td className="px-6 py-4 text-center whitespace-nowrap">
-                              <button className="text-orange-600 hover:text-orange-700 font-medium">Détails</button>
+                              <button className="text-pink-600 hover:text-pink-700 font-medium">Détails</button>
                             </td>
                           </tr>
                           <tr className="hover:bg-gray-50 transition-colors duration-150">
@@ -786,7 +786,7 @@
                               <span className="px-2.5 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Livrée</span>
                             </td>
                             <td className="px-6 py-4 text-center whitespace-nowrap">
-                              <button className="text-orange-600 hover:text-orange-700 font-medium">Détails</button>
+                              <button className="text-pink-600 hover:text-pink-700 font-medium">Détails</button>
                             </td>
                           </tr>
                         </tbody>
@@ -806,7 +806,7 @@
                     </div>
                     <button
                       onClick={() => setShowSupplierModal(true)}
-                      className="mt-4 md:mt-0 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                      className="mt-4 md:mt-0 bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-pink-500/25"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -819,13 +819,13 @@
                     {suppliers.map(supplier => (
                       <div key={supplier.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200">
                         <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                            <svg className="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
                           </div>
                           <div className="flex gap-1">
-                            <button className="p-1.5 hover:bg-orange-100 text-orange-600 rounded transition-colors duration-200">
+                            <button className="p-1.5 hover:bg-pink-100 text-pink-600 rounded transition-colors duration-200">
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                               </svg>
@@ -866,7 +866,7 @@
                               setActiveTab('commandes');
                               showNotif(`Commandes de ${supplier.nom}`);
                             }}
-                            className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200"
+                            className="bg-pink-100 hover:bg-pink-200 text-pink-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200"
                           >
                             Commander
                           </button>
@@ -920,7 +920,7 @@
                     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm text-gray-600">Rotation stock</span>
-                        <span className="text-orange-500 text-sm">stable</span>
+                        <span className="text-pink-500 text-sm">stable</span>
                       </div>
                       <p className="text-2xl font-display font-bold text-gray-900">4.2x</p>
                     </div>
@@ -955,7 +955,7 @@
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">1</div>
+                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center text-pink-700 font-bold">1</div>
                             <div>
                               <p className="font-medium text-gray-900">Cigarettes Export A</p>
                               <p className="text-sm text-gray-600">1,234 unités</p>
@@ -965,7 +965,7 @@
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">2</div>
+                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center text-pink-700 font-bold">2</div>
                             <div>
                               <p className="font-medium text-gray-900">Loto-Québec Gratteux</p>
                               <p className="text-sm text-gray-600">892 unités</p>
@@ -975,7 +975,7 @@
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">3</div>
+                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center text-pink-700 font-bold">3</div>
                             <div>
                               <p className="font-medium text-gray-900">Bière Molson Export</p>
                               <p className="text-sm text-gray-600">768 unités</p>
@@ -985,7 +985,7 @@
                         </div>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">4</div>
+                            <div className="w-8 h-8 bg-pink-100 rounded flex items-center justify-center text-pink-700 font-bold">4</div>
                             <div>
                               <p className="font-medium text-gray-900">Coca-Cola 355ml</p>
                               <p className="text-sm text-gray-600">656 unités</p>
@@ -1042,7 +1042,7 @@
                       type="text"
                       name="nom"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1050,7 +1050,7 @@
                     <select
                       name="categorie"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     >
                       <option>Boissons</option>
                       <option>Collations</option>
@@ -1070,7 +1070,7 @@
                         name="quantite"
                         required
                         min="0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -1080,7 +1080,7 @@
                         name="seuil"
                         required
                         min="0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -1092,7 +1092,7 @@
                       required
                       min="0"
                       step="0.01"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1100,7 +1100,7 @@
                     <select
                       name="fournisseur"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     >
                       {suppliers.map(s => (
                         <option key={s.id}>{s.nom}</option>
@@ -1110,7 +1110,7 @@
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
-                      className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium"
+                      className="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-200 font-medium"
                     >
                       Ajouter
                     </button>
@@ -1156,7 +1156,7 @@
                     <input
                       type="text"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1164,7 +1164,7 @@
                     <input
                       type="text"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1172,7 +1172,7 @@
                     <input
                       type="tel"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1180,13 +1180,13 @@
                     <input
                       type="email"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
-                      className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium"
+                      className="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-200 font-medium"
                     >
                       Ajouter
                     </button>
@@ -1249,7 +1249,7 @@
                       name="nom"
                       required
                       defaultValue={editingProduct.nom}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1258,7 +1258,7 @@
                       name="categorie"
                       required
                       defaultValue={editingProduct.categorie}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     >
                       <option>Boissons</option>
                       <option>Collations</option>
@@ -1279,7 +1279,7 @@
                         required
                         min="0"
                         defaultValue={editingProduct.quantite}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -1290,7 +1290,7 @@
                         required
                         min="0"
                         defaultValue={editingProduct.seuil}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -1303,7 +1303,7 @@
                       min="0"
                       step="0.01"
                       defaultValue={editingProduct.prix}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -1312,7 +1312,7 @@
                       name="fournisseur"
                       required
                       defaultValue={editingProduct.fournisseur}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                     >
                       {suppliers.map(s => (
                         <option key={s.id}>{s.nom}</option>
@@ -1322,7 +1322,7 @@
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
-                      className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium"
+                      className="flex-1 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transform hover:scale-105 transition-all duration-200 font-medium"
                     >
                       Modifier
                     </button>
