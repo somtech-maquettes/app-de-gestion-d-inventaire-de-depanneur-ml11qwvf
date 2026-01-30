@@ -16,6 +16,13 @@ app de gestion d'inventaire de depanneur
 
 ## Historique des modifications
 
+### 2026-01-30 - Modification
+**Demande:** enleve a bulle d'Aide
+**Specs:** Suppression de la bulle d'aide dans la sidebar gauche
+**Complexité:** simple
+**Livrables:** Suppression bulle d'aide orange dans sidebar gauche
+
+
 
 ### 2026-01-30 - Modification
 **Demande:** active les bouton de modification dans l'invenatire

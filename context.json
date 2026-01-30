@@ -39,7 +39,16 @@
         "Pré-remplissage automatique des champs",
         "Notification de succès après modification"
       ]
+    },
+    {
+      "date": "2026-01-30T15:53:26.743Z",
+      "feedback": "enleve a bulle d'Aide",
+      "specs_summary": "Suppression de la bulle d'aide dans la sidebar gauche",
+      "complexity": "simple",
+      "delivery_summary": [
+        "Suppression bulle d'aide orange dans sidebar gauche"
+      ]
     }
   ],
-  "last_modified": "2026-01-30T15:50:37.346Z"
+  "last_modified": "2026-01-30T15:53:26.743Z"
 }
