@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maquette</title>
+
+  <!-- Google Fonts selon le Design Brief -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Leaflet CSS (pour cartes si nécessaire) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Polices du Design Brief */
+    .font-display { font-family: 'Poppins', serif; }
+    .font-body { font-family: 'Nunito Sans', sans-serif; }
+
+    /* Appliquer la police body par défaut */
+    body { font-family: 'Nunito Sans', sans-serif; }
+
+    /* Animation de base pour les entrées */
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fade-in-up 0.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* Animation de fade simple */
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.3s ease-out forwards;
+    }
+
+    /* Animation scale */
+    @keyframes scale-in {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-scale-in {
+      animation: scale-in 0.3s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- CHARGEMENT SÉQUENTIEL DES CDN - NE PAS MODIFIER -->
+  <script>
+    (function() {
+      var scripts = [
+        'https://unpkg.com/react@18/umd/react.production.min.js',
+        'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
+        'https://unpkg.com/prop-types@15/prop-types.min.js',
+        'https://unpkg.com/recharts@2.12.7/umd/Recharts.js',
+        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+        'https://unpkg.com/@babel/standalone/babel.min.js'
+      ];
+      var index = 0;
+      function loadNext() {
+        if (index >= scripts.length) {
+          if (typeof Babel !== 'undefined' && Babel.transformScriptTags) {
+            Babel.transformScriptTags();
+          }
+          return;
+        }
+        var script = document.createElement('script');
+        script.src = scripts[index];
+        script.onload = function() { index++; loadNext(); };
+        script.onerror = function() { console.error('Erreur CDN: ' + scripts[index]); };
+        document.body.appendChild(script);
+      }
+      loadNext();
+    })();
+  </script>
+
+  <script type="text/babel">
+    // OBLIGATOIRE: Destructurer Recharts (NE PAS SUPPRIMER)
+    const { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area,
+            XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
+
+    // ============================================================
+    // CLAUDE: CRÉE TON APPLICATION CI-DESSOUS
+    // Utilise les couleurs et effets du Design Brief
+    // ============================================================
+
+    // Mock data for convenience store inventory
+    const initialProducts = [
+      { id: 1, nom: "Coca-Cola 355ml", categorie: "Boissons", quantite: 48, seuil: 24, prix: 2.49, fournisseur: "Coca-Cola Canada" },
+      { id: 2, nom: "Chips Lay's Original", categorie: "Collations", quantite: 36, seuil: 20, prix: 3.99, fournisseur: "PepsiCo Canada" },
+      { id: 3, nom: "Cigarettes Export A", categorie: "Tabac", quantite: 120, seuil: 50, prix: 16.99, fournisseur: "JTI-Macdonald" },
+      { id: 4, nom: "Lait 2L Québon", categorie: "Produits laitiers", quantite: 12, seuil: 10, prix: 5.99, fournisseur: "Agropur" },
+      { id: 5, nom: "Pain Tranché POM", categorie: "Boulangerie", quantite: 8, seuil: 6, prix: 3.49, fournisseur: "Boulangerie Vachon" },
+      { id: 6, nom: "Bière Molson Export", categorie: "Alcool", quantite: 96, seuil: 48, prix: 2.99, fournisseur: "Molson Coors" },
+      { id: 7, nom: "Journal de Montréal", categorie: "Journaux", quantite: 15, seuil: 5, prix: 2.50, fournisseur: "Québecor" },
+      { id: 8, nom: "Gratteux Loto-Québec", categorie: "Loterie", quantite: 200, seuil: 50, prix: 5.00, fournisseur: "Loto-Québec" }
+    ];
+
+    const mockStats = [
+      { mois: "Jan", ventes: 42000, inventaire: 28000 },
+      { mois: "Fév", ventes: 38000, inventaire: 26500 },
+      { mois: "Mar", ventes: 45000, inventaire: 29000 },
+      { mois: "Avr", ventes: 51000, inventaire: 31000 },
+      { mois: "Mai", ventes: 48000, inventaire: 30000 },
+      { mois: "Jun", ventes: 55000, inventaire: 32000 }
+    ];
+
+    const categoriesData = [
+      { name: "Boissons", value: 35, color: "#f97316" },
+      { name: "Collations", value: 25, color: "#fb923c" },
+      { name: "Tabac", value: 20, color: "#fdba74" },
+      { name: "Loterie", value: 10, color: "#fed7aa" },
+      { name: "Autres", value: 10, color: "#ffedd5" }
+    ];
+
+    const suppliers = [
+      { id: 1, nom: "Coca-Cola Canada", contact: "Jean Tremblay", telephone: "(514) 555-0123", email: "jtremblay@cocacola.ca", commandes: 156 },
+      { id: 2, nom: "PepsiCo Canada", contact: "Marie Lavoie", telephone: "(514) 555-0145", email: "mlavoie@pepsi.ca", commandes: 143 },
+      { id: 3, nom: "Molson Coors", contact: "Pierre Gagnon", telephone: "(514) 555-0167", email: "pgagnon@molson.ca", commandes: 98 },
+      { id: 4, nom: "Agropur", contact: "Sophie Bouchard", telephone: "(450) 555-0189", email: "sbouchard@agropur.ca", commandes: 245 }
+    ];
+
+    function App() {
+      const [activeTab, setActiveTab] = React.useState('dashboard');
+      const [products, setProducts] = React.useState(initialProducts);
+      const [showAddModal, setShowAddModal] = React.useState(false);
+      const [showSupplierModal, setShowSupplierModal] = React.useState(false);
+      const [searchTerm, setSearchTerm] = React.useState('');
+      const [selectedCategory, setSelectedCategory] = React.useState('Toutes');
+      const [showNotification, setShowNotification] = React.useState(false);
+      const [notificationMessage, setNotificationMessage] = React.useState('');
+
+      const showNotif = (message) => {
+        setNotificationMessage(message);
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 3000);
+      };
+
+      const lowStockProducts = products.filter(p => p.quantite <= p.seuil);
+
+      const filteredProducts = products.filter(product => {
+        const matchSearch = product.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          product.categorie.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchCategory = selectedCategory === 'Toutes' || product.categorie === selectedCategory;
+        return matchSearch && matchCategory;
+      });
+
+      const categories = ['Toutes', ...new Set(products.map(p => p.categorie))];
+
+      return (
+        <div className="min-h-screen bg-gray-50 font-body">
+          {/* Notification */}
+          {showNotification && (
+            <div className="fixed top-4 right-4 z-50 animate-scale-in">
+              <div className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="font-medium">{notificationMessage}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Header */}
+          <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+            <div className="px-4 md:px-8 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h18M3 7h18M3 11h18M3 15h18M3 19h18" />
+                    </svg>
+                  </div>
+                  <h1 className="font-display text-xl md:text-2xl font-bold text-gray-900">Dépanneur Express</h1>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {lowStockProducts.length > 0 && (
+                  <div className="bg-orange-100 text-orange-700 px-3 py-1.5 rounded-full flex items-center gap-2 animate-pulse">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span className="font-medium text-sm">{lowStockProducts.length} produits bas</span>
+                  </div>
+                )}
+
+                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <div className="flex h-[calc(100vh-73px)]">
+            {/* Sidebar */}
+            <aside className="w-64 bg-white border-r border-gray-200 hidden lg:block">
+              <nav className="p-4 space-y-1">
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
+                    ${activeTab === 'dashboard'
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  Tableau de bord
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('inventaire')}
+                  className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
+                    ${activeTab === 'inventaire'
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  Inventaire
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('commandes')}
+                  className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
+                    ${activeTab === 'commandes'
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  Commandes
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('fournisseurs')}
+                  className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
+                    ${activeTab === 'fournisseurs'
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  Fournisseurs
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('rapports')}
+                  className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-3
+                    ${activeTab === 'rapports'
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/25 transform scale-105'
+                      : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  Rapports
+                </button>
+              </nav>
+
+              <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+                <div className="bg-orange-100 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <span className="font-medium text-orange-900">Aide</span>
+                  </div>
+                  <p className="text-sm text-orange-700">Besoin d'aide? Contactez le support</p>
+                </div>
+              </div>
+            </aside>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 lg:hidden z-40">
+              <div className="grid grid-cols-5 gap-1">
+                <button
+                  onClick={() => setActiveTab('dashboard')}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'dashboard' ? 'text-orange-500' : 'text-gray-600'}`}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  <span className="text-xs">Accueil</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('inventaire')}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'inventaire' ? 'text-orange-500' : 'text-gray-600'}`}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <span className="text-xs">Stock</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('commandes')}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'commandes' ? 'text-orange-500' : 'text-gray-600'}`}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  <span className="text-xs">Commandes</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('fournisseurs')}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'fournisseurs' ? 'text-orange-500' : 'text-gray-600'}`}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span className="text-xs">Fournisseurs</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('rapports')}
+                  className={`py-2 px-3 flex flex-col items-center gap-1 ${activeTab === 'rapports' ? 'text-orange-500' : 'text-gray-600'}`}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <span className="text-xs">Rapports</span>
+                </button>
+              </div>
+            </nav>
+
+            {/* Main Content */}
+            <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
+              {/* Dashboard */}
+              {activeTab === 'dashboard' && (
+                <div className="p-4 md:p-8 space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                      <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">Tableau de bord</h2>
+                      <p className="text-gray-600 mt-1">Vue d'ensemble de votre dépanneur</p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-4 md:mt-0">
+                      <span className="text-sm text-gray-600">Dernière mise à jour:</span>
+                      <span className="text-sm font-medium text-gray-900">{new Date().toLocaleString('fr-CA')}</span>
+                    </div>
+                  </div>
+
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '0ms'}}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <span className="text-green-500 text-sm font-medium bg-green-100 px-2 py-1 rounded-full">+12%</span>
+                      </div>
+                      <h3 className="text-gray-600 text-sm font-medium">Ventes du jour</h3>
+                      <p className="text-2xl font-display font-bold text-gray-900 mt-1">2 847$</p>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '100ms'}}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                          </svg>
+                        </div>
+                        <span className="text-gray-500 text-sm font-medium bg-gray-100 px-2 py-1 rounded-full">stable</span>
+                      </div>
+                      <h3 className="text-gray-600 text-sm font-medium">Valeur inventaire</h3>
+                      <p className="text-2xl font-display font-bold text-gray-900 mt-1">32 156$</p>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '200ms'}}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                        </div>
+                        <span className="text-red-500 text-sm font-medium bg-red-100 px-2 py-1 rounded-full">urgent</span>
+                      </div>
+                      <h3 className="text-gray-600 text-sm font-medium">Stock bas</h3>
+                      <p className="text-2xl font-display font-bold text-gray-900 mt-1">{lowStockProducts.length} items</p>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200 animate-fade-in-up" style={{animationDelay: '300ms'}}>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                          </svg>
+                        </div>
+                        <span className="text-green-500 text-sm font-medium bg-green-100 px-2 py-1 rounded-full">actifs</span>
+                      </div>
+                      <h3 className="text-gray-600 text-sm font-medium">Fournisseurs</h3>
+                      <p className="text-2xl font-display font-bold text-gray-900 mt-1">{suppliers.length}</p>
+                    </div>
+                  </div>
+
+                  {/* Charts Row */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Sales Chart */}
+                    <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="font-display text-lg font-semibold text-gray-900">Évolution des ventes</h3>
+                        <select className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                          <option>6 derniers mois</option>
+                          <option>3 derniers mois</option>
+                          <option>Ce mois</option>
+                        </select>
+                      </div>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={mockStats}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                          <XAxis dataKey="mois" stroke="#6b7280" />
+                          <YAxis stroke="#6b7280" />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                            labelStyle={{ color: '#111827', fontWeight: 'bold' }}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="ventes"
+                            stroke="#f97316"
+                            strokeWidth={3}
+                            fill="url(#colorVentes)"
+                          />
+                          <defs>
+                            <linearGradient id="colorVentes" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    {/* Categories Pie Chart */}
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <h3 className="font-display text-lg font-semibold text-gray-900 mb-6">Ventes par catégorie</h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                          <Pie
+                            data={categoriesData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={100}
+                            paddingAngle={5}
+                            dataKey="value"
+                          >
+                            {categoriesData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
+                      <div className="mt-4 space-y-2">
+                        {categoriesData.map((cat, idx) => (
+                          <div key={idx} className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-3 h-3 rounded-full" style={{backgroundColor: cat.color}}></div>
+                              <span className="text-sm text-gray-600">{cat.name}</span>
+                            </div>
+                            <span className="text-sm font-medium text-gray-900">{cat.value}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Low Stock Alert */}
+                  {lowStockProducts.length > 0 && (
+                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                        </div>
+                        <h3 className="font-display text-lg font-semibold text-orange-900">Produits en stock bas</h3>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {lowStockProducts.map(product => (
+                          <div key={product.id} className="bg-white rounded-lg p-3 border border-orange-200 flex items-center justify-between">
+                            <div>
+                              <p className="font-medium text-gray-900">{product.nom}</p>
+                              <p className="text-sm text-gray-600">Stock: {product.quantite} / Seuil: {product.seuil}</p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setActiveTab('commandes');
+                                showNotif('Navigation vers les commandes');
+                              }}
+                              className="p-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Inventory */}
+              {activeTab === 'inventaire' && (
+                <div className="p-4 md:p-8">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                      <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">Inventaire</h2>
+                      <p className="text-gray-600 mt-1">Gérez votre stock de produits</p>
+                    </div>
+                    <button
+                      onClick={() => setShowAddModal(true)}
+                      className="mt-4 md:mt-0 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Ajouter un produit
+                    </button>
+                  </div>
+
+                  {/* Search and Filter */}
+                  <div className="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-200">
+                    <div className="flex flex-col lg:flex-row gap-4">
+                      <div className="flex-1">
+                        <div className="relative">
+                          <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                          <input
+                            type="text"
+                            placeholder="Rechercher un produit..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        {categories.map(cat => (
+                          <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(cat)}
+                            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200
+                              ${selectedCategory === cat
+                                ? 'bg-orange-500 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Products Table */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gray-50 border-b border-gray-200">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Produit</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Catégorie</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Quantité</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Seuil</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Prix</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Statut</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                          {filteredProducts.map(product => (
+                            <tr key={product.id} className="hover:bg-gray-50 transition-colors duration-150">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="font-medium text-gray-900">{product.nom}</div>
+                                <div className="text-sm text-gray-500">{product.fournisseur}</div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full">
+                                  {product.categorie}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap">
+                                <span className={`font-medium ${product.quantite <= product.seuil ? 'text-red-600' : 'text-gray-900'}`}>
+                                  {product.quantite}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap text-gray-600">
+                                {product.seuil}
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap font-medium text-gray-900">
+                                {product.prix.toFixed(2)}$
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap">
+                                {product.quantite > product.seuil ? (
+                                  <span className="px-2.5 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
+                                    En stock
+                                  </span>
+                                ) : (
+                                  <span className="px-2.5 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full animate-pulse">
+                                    Stock bas
+                                  </span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 text-center whitespace-nowrap">
+                                <div className="flex items-center justify-center gap-2">
+                                  <button
+                                    onClick={() => {
+                                      const newQty = prompt(`Nouvelle quantité pour ${product.nom}:`, product.quantite);
+                                      if (newQty) {
+                                        setProducts(products.map(p =>
+                                          p.id === product.id ? {...p, quantite: parseInt(newQty)} : p
+                                        ));
+                                        showNotif('Quantité mise à jour');
+                                      }
+                                    }}
+                                    className="p-1.5 hover:bg-orange-100 text-orange-600 rounded transition-colors duration-200"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (confirm(`Supprimer ${product.nom}?`)) {
+                                        setProducts(products.filter(p => p.id !== product.id));
+                                        showNotif('Produit supprimé');
+                                      }
+                                    }}
+                                    className="p-1.5 hover:bg-red-100 text-red-600 rounded transition-colors duration-200"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Commandes */}
+              {activeTab === 'commandes' && (
+                <div className="p-4 md:p-8">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                      <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">Commandes</h2>
+                      <p className="text-gray-600 mt-1">Gérez vos commandes fournisseurs</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setActiveTab('inventaire');
+                        showNotif('Vérifiez votre inventaire d\'abord');
+                      }}
+                      className="mt-4 md:mt-0 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Nouvelle commande
+                    </button>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="font-display font-semibold text-gray-900">Commande automatique</h3>
+                          <p className="text-sm text-gray-600">Basée sur le stock bas</p>
+                        </div>
+                      </div>
+                      <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg transition-colors duration-200 font-medium">
+                        Générer suggestions
+                      </button>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="font-display font-semibold text-gray-900">Commandes en cours</h3>
+                          <p className="text-sm text-gray-600">3 en livraison</p>
+                        </div>
+                      </div>
+                      <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg transition-colors duration-200 font-medium">
+                        Voir détails
+                      </button>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-lg transition-all duration-200">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="font-display font-semibold text-gray-900">Livraisons récentes</h3>
+                          <p className="text-sm text-gray-600">5 cette semaine</p>
+                        </div>
+                      </div>
+                      <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg transition-colors duration-200 font-medium">
+                        Historique complet
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Recent Orders */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div className="p-6 border-b border-gray-200">
+                      <h3 className="font-display text-lg font-semibold text-gray-900">Commandes récentes</h3>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead className="bg-gray-50 border-b border-gray-200">
+                          <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"># Commande</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Fournisseur</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Date</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Montant</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Statut</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                          <tr className="hover:bg-gray-50 transition-colors duration-150">
+                            <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">CMD-2024-047</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-gray-900">Coca-Cola Canada</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-gray-600">2024-01-30</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap font-medium text-gray-900">856.45$</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                              <span className="px-2.5 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">En livraison</span>
+                            </td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                              <button className="text-orange-600 hover:text-orange-700 font-medium">Suivre</button>
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-50 transition-colors duration-150">
+                            <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">CMD-2024-046</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-gray-900">PepsiCo Canada</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-gray-600">2024-01-29</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap font-medium text-gray-900">1,234.00$</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                              <span className="px-2.5 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Livrée</span>
+                            </td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                              <button className="text-orange-600 hover:text-orange-700 font-medium">Détails</button>
+                            </td>
+                          </tr>
+                          <tr className="hover:bg-gray-50 transition-colors duration-150">
+                            <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">CMD-2024-045</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-gray-900">Molson Coors</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap text-gray-600">2024-01-28</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap font-medium text-gray-900">2,145.80$</td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                              <span className="px-2.5 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Livrée</span>
+                            </td>
+                            <td className="px-6 py-4 text-center whitespace-nowrap">
+                              <button className="text-orange-600 hover:text-orange-700 font-medium">Détails</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Fournisseurs */}
+              {activeTab === 'fournisseurs' && (
+                <div className="p-4 md:p-8">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                      <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">Fournisseurs</h2>
+                      <p className="text-gray-600 mt-1">Gérez vos partenaires commerciaux</p>
+                    </div>
+                    <button
+                      onClick={() => setShowSupplierModal(true)}
+                      className="mt-4 md:mt-0 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium flex items-center gap-2 shadow-lg shadow-orange-500/25"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Ajouter fournisseur
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {suppliers.map(supplier => (
+                      <div key={supplier.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-200 p-6 border border-gray-200">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <svg className="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                          </div>
+                          <div className="flex gap-1">
+                            <button className="p-1.5 hover:bg-orange-100 text-orange-600 rounded transition-colors duration-200">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                            </button>
+                            <button className="p-1.5 hover:bg-red-100 text-red-600 rounded transition-colors duration-200">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+
+                        <h3 className="font-display font-semibold text-lg text-gray-900 mb-1">{supplier.nom}</h3>
+                        <p className="text-sm text-gray-600 mb-4">Contact: {supplier.contact}</p>
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            <span className="text-sm text-gray-600">{supplier.telephone}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            <span className="text-sm text-gray-600">{supplier.email}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                          <div>
+                            <p className="text-xs text-gray-500">Total commandes</p>
+                            <p className="font-display font-semibold text-gray-900">{supplier.commandes}</p>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setActiveTab('commandes');
+                              showNotif(`Commandes de ${supplier.nom}`);
+                            }}
+                            className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200"
+                          >
+                            Commander
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Rapports */}
+              {activeTab === 'rapports' && (
+                <div className="p-4 md:p-8 space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                      <h2 className="font-display text-2xl md:text-3xl font-bold text-gray-900">Rapports & Analyses</h2>
+                      <p className="text-gray-600 mt-1">Performance et statistiques de votre commerce</p>
+                    </div>
+                    <div className="flex gap-2 mt-4 md:mt-0">
+                      <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Exporter PDF
+                      </button>
+                      <button className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Partager
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-gray-600">Ventes mensuelles</span>
+                        <span className="text-green-500 text-sm">+15%</span>
+                      </div>
+                      <p className="text-2xl font-display font-bold text-gray-900">48,562$</p>
+                    </div>
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-gray-600">Marge brute</span>
+                        <span className="text-green-500 text-sm">+2.3%</span>
+                      </div>
+                      <p className="text-2xl font-display font-bold text-gray-900">28.5%</p>
+                    </div>
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-gray-600">Rotation stock</span>
+                        <span className="text-orange-500 text-sm">stable</span>
+                      </div>
+                      <p className="text-2xl font-display font-bold text-gray-900">4.2x</p>
+                    </div>
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-gray-600">Clients/jour</span>
+                        <span className="text-green-500 text-sm">+8%</span>
+                      </div>
+                      <p className="text-2xl font-display font-bold text-gray-900">156</p>
+                    </div>
+                  </div>
+
+                  {/* Charts */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <h3 className="font-display text-lg font-semibold text-gray-900 mb-6">Ventes par mois</h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={mockStats}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                          <XAxis dataKey="mois" stroke="#6b7280" />
+                          <YAxis stroke="#6b7280" />
+                          <Tooltip
+                            contentStyle={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                          />
+                          <Bar dataKey="ventes" fill="#f97316" radius={[8, 8, 0, 0]} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                      <h3 className="font-display text-lg font-semibold text-gray-900 mb-6">Top produits vendus</h3>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">1</div>
+                            <div>
+                              <p className="font-medium text-gray-900">Cigarettes Export A</p>
+                              <p className="text-sm text-gray-600">1,234 unités</p>
+                            </div>
+                          </div>
+                          <p className="font-display font-semibold text-gray-900">20,965$</p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">2</div>
+                            <div>
+                              <p className="font-medium text-gray-900">Loto-Québec Gratteux</p>
+                              <p className="text-sm text-gray-600">892 unités</p>
+                            </div>
+                          </div>
+                          <p className="font-display font-semibold text-gray-900">4,460$</p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">3</div>
+                            <div>
+                              <p className="font-medium text-gray-900">Bière Molson Export</p>
+                              <p className="text-sm text-gray-600">768 unités</p>
+                            </div>
+                          </div>
+                          <p className="font-display font-semibold text-gray-900">2,296$</p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-orange-100 rounded flex items-center justify-center text-orange-700 font-bold">4</div>
+                            <div>
+                              <p className="font-medium text-gray-900">Coca-Cola 355ml</p>
+                              <p className="text-sm text-gray-600">656 unités</p>
+                            </div>
+                          </div>
+                          <p className="font-display font-semibold text-gray-900">1,633$</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </main>
+          </div>
+
+          {/* Add Product Modal */}
+          {showAddModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-xl p-6 w-full max-w-md animate-scale-in">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-display text-xl font-semibold text-gray-900">Ajouter un produit</h3>
+                  <button
+                    onClick={() => setShowAddModal(false)}
+                    className="p-1 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                  >
+                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const newProduct = {
+                      id: products.length + 1,
+                      nom: formData.get('nom'),
+                      categorie: formData.get('categorie'),
+                      quantite: parseInt(formData.get('quantite')),
+                      seuil: parseInt(formData.get('seuil')),
+                      prix: parseFloat(formData.get('prix')),
+                      fournisseur: formData.get('fournisseur')
+                    };
+                    setProducts([...products, newProduct]);
+                    setShowAddModal(false);
+                    showNotif('Produit ajouté avec succès');
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nom du produit</label>
+                    <input
+                      type="text"
+                      name="nom"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                    <select
+                      name="categorie"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    >
+                      <option>Boissons</option>
+                      <option>Collations</option>
+                      <option>Tabac</option>
+                      <option>Produits laitiers</option>
+                      <option>Boulangerie</option>
+                      <option>Alcool</option>
+                      <option>Journaux</option>
+                      <option>Loterie</option>
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+                      <input
+                        type="number"
+                        name="quantite"
+                        required
+                        min="0"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Seuil d'alerte</label>
+                      <input
+                        type="number"
+                        name="seuil"
+                        required
+                        min="0"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Prix unitaire</label>
+                    <input
+                      type="number"
+                      name="prix"
+                      required
+                      min="0"
+                      step="0.01"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Fournisseur</label>
+                    <select
+                      name="fournisseur"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    >
+                      {suppliers.map(s => (
+                        <option key={s.id}>{s.nom}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="submit"
+                      className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium"
+                    >
+                      Ajouter
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddModal(false)}
+                      className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Add Supplier Modal */}
+          {showSupplierModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-xl p-6 w-full max-w-md animate-scale-in">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-display text-xl font-semibold text-gray-900">Ajouter un fournisseur</h3>
+                  <button
+                    onClick={() => setShowSupplierModal(false)}
+                    className="p-1 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                  >
+                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    showNotif('Fournisseur ajouté avec succès');
+                    setShowSupplierModal(false);
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise</label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Contact principal</label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                    <input
+                      type="tel"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      required
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div className="flex gap-3 pt-4">
+                    <button
+                      type="submit"
+                      className="flex-1 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transform hover:scale-105 transition-all duration-200 font-medium"
+                    >
+                      Ajouter
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSupplierModal(false)}
+                      className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors duration-200 font-medium"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

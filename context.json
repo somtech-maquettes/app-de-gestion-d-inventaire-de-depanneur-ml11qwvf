@@ -1,0 +1,29 @@
+{
+  "job_id": "ac31e0ff-62f4-4f11-8ed7-fb0fda41e07e",
+  "client_name": "app de gestion d'inventaire de depanneur - Somtech Solution",
+  "created_at": "2026-01-30T15:37:21.912Z",
+  "design_direction": {
+    "id": "retail-commerce",
+    "name": "Retail/Commerce",
+    "palette": {
+      "bg": "bg-gray-50",
+      "surface": "bg-white",
+      "accent": "bg-orange-500",
+      "text": "text-gray-900",
+      "muted": "text-gray-600"
+    },
+    "fonts": {
+      "display": "Poppins",
+      "body": "Nunito Sans",
+      "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Nunito+Sans:wght@400;600&display=swap"
+    }
+  },
+  "user_responses": [
+    {
+      "question_id": "54195b35-ca3e-456d-931b-0da1ea3c8ee8",
+      "value": "retail-commerce",
+      "is_default": false
+    }
+  ],
+  "modifications": []
+}

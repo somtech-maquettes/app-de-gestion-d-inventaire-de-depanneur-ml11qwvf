@@ -1,0 +1,44 @@
+{
+  "features": [
+    {
+      "libelle": "Tableau de bord principal",
+      "montant": 3500,
+      "obligatoire": true
+    },
+    {
+      "libelle": "Gestion complète de l'inventaire",
+      "montant": 3800,
+      "obligatoire": true
+    },
+    {
+      "libelle": "Système de commandes fournisseurs",
+      "montant": 2800,
+      "obligatoire": true
+    },
+    {
+      "libelle": "Gestion des fournisseurs",
+      "montant": 2200,
+      "obligatoire": true
+    },
+    {
+      "libelle": "Rapports et analyses de performance",
+      "montant": 2400,
+      "obligatoire": false
+    },
+    {
+      "libelle": "Système d'alertes stock bas",
+      "montant": 1500,
+      "obligatoire": false
+    },
+    {
+      "libelle": "Recherche et filtres avancés",
+      "montant": 1200,
+      "obligatoire": false
+    },
+    {
+      "libelle": "Export des données en PDF",
+      "montant": 1200,
+      "obligatoire": false
+    }
+  ]
+}
